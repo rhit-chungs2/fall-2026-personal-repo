@@ -23,7 +23,7 @@ class PlateLoader:
     def send_command(self,command):
         self.ser.reset_input_buffer()
         message_bytes = (command + "\n").encode()
-        print(message_bytes)
+        #print(message_bytes)
 
         self.ser.write(message_bytes)
 
