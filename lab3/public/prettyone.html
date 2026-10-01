@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plate Loader Control</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --panel: #E4E9ED;
+            --surface: #F7F9FA;
+            --ink: #1E2A33;
+            --muted: #5C6B77;
+            --steel: #9AA6B1;
+            --signal: #2E6DB4;
+            --hazard: #F0BE2C;
+            --fault: #B8432F;
+            --ok: #2F7D4F;
+            --sans: "Barlow", "Segoe UI", system-ui, sans-serif;
+            --cond: "Barlow Condensed", "Arial Narrow", "Segoe UI", sans-serif;
+            --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--panel);
+            color: var(--ink);
+            font-family: var(--sans);
+            font-size: 16px;
+            line-height: 1.45;
+        }
+
+        main {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 32px 20px 48px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-family: var(--cond);
+            font-size: 2.6rem;
+            line-height: 1;
+            letter-spacing: 0.01em;
+        }
+
+        header p {
+            margin: 6px 0 0;
+            color: var(--muted);
+        }
+
+        /* Serial reply readout */
+        .readout {
+            margin: 24px 0 28px;
+            padding: 14px 16px;
+            background: var(--ink);
+            color: #DCE6EE;
+            border-left: 6px solid var(--steel);
+            border-radius: 4px;
+            font-family: var(--mono);
+            font-size: 0.95rem;
+            min-height: 52px;
+            overflow-wrap: anywhere;
+            transition: border-color 0.2s;
+        }
+        .readout.is-error { border-left-color: var(--fault); color: #F4C7BD; }
+        .readout.is-ok    { border-left-color: var(--ok); }
+
+        section {
+            background: var(--surface);
+            border-radius: 6px;
+            padding: 18px 20px 20px;
+            margin-bottom: 16px;
+        }
+
+        h2 {
+            margin: 0 0 14px;
+            font-family: var(--cond);
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        button {
+            font: 600 1rem var(--sans);
+            color: var(--ink);
+            background: #fff;
+            border: 2px solid var(--steel);
+            border-radius: 4px;
+            padding: 10px 16px;
+            cursor: pointer;
+        }
+        button:hover  { border-color: var(--ink); }
+        button:active { transform: translateY(1px); }
+        button:focus-visible,
+        input:focus-visible {
+            outline: 3px solid var(--signal);
+            outline-offset: 2px;
+        }
+
+        /* Home row */
+        .home {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .home p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+        #reset {
+            background: var(--hazard);
+            border-color: #C99A10;
+            padding: 12px 22px;
+        }
+        #reset:hover { border-color: var(--ink); }
+
+        /* X-axis rail: the five stations sit on a track */
+        .rail {
+            position: relative;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            padding: 6px 0;
+        }
+        .rail::before {
+            content: "";
+            position: absolute;
+            left: 4%;
+            right: 4%;
+            top: 50%;
+            height: 8px;
+            margin-top: -4px;
+            background: repeating-linear-gradient(90deg, var(--steel) 0 14px, #B7C0C8 14px 18px);
+            border-radius: 4px;
+        }
+        .rail button {
+            position: relative;
+            aspect-ratio: 1;
+            max-width: 84px;
+            justify-self: center;
+            width: 100%;
+            font-family: var(--cond);
+            font-size: 1.9rem;
+            padding: 0;
+            border-width: 3px;
+        }
+        .rail button:hover { background: #EAF1FA; border-color: var(--signal); }
+
+        /* Z axis + gripper side by side */
+        .pair {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .pair section { margin-bottom: 0; }
+        .split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        /* Move plate */
+        .move {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .move label {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+        .move input {
+            width: 90px;
+            font: 600 1.2rem var(--sans);
+            color: var(--ink);
+            padding: 8px 10px;
+            border: 2px solid var(--steel);
+            border-radius: 4px;
+            background: #fff;
+        }
+        #move {
+            background: var(--signal);
+            border-color: var(--signal);
+            color: #fff;
+            padding: 11px 24px;
+        }
+        #move:hover { background: #255A95; border-color: #255A95; }
+
+        @media (max-width: 560px) {
+            .pair { grid-template-columns: 1fr; gap: 16px; }
+            .rail { gap: 6px; }
+            .rail button { font-size: 1.5rem; }
+            header h1 { font-size: 2.1rem; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; }
+            button:active { transform: none; }
+        }
+    </style>
+</head>
+<body>
+<main>
+    <header>
+        <h1>Plate Loader Control</h1>
+        <p>HTML client for the serial server. A MATLAB frontend is also available.</p>
+    </header>
+
+    <div id="replyText" class="readout" aria-live="polite">Waiting for a command…</div>
+
+    <section>
+        <div class="home">
+            <button id="reset">Reset</button>
+            <p>Homes the carriage. Run this after the server restarts.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>X-axis position</h2>
+        <div class="rail">
+            <button id="XAXIS1" aria-label="Move X-axis to position 1">1</button>
+            <button id="XAXIS2" aria-label="Move X-axis to position 2">2</button>
+            <button id="XAXIS3" aria-label="Move X-axis to position 3">3</button>
+            <button id="XAXIS4" aria-label="Move X-axis to position 4">4</button>
+            <button id="XAXIS5" aria-label="Move X-axis to position 5">5</button>
+        </div>
+    </section>
+
+    <div class="pair">
+        <section>
+            <h2>Z-axis</h2>
+            <div class="split">
+                <button id="ZEXTEND">Extend</button>
+                <button id="ZRETRACT">Retract</button>
+            </div>
+        </section>
+        <section>
+            <h2>Gripper</h2>
+            <div class="split">
+                <button id="GRIPPEROPEN">Open</button>
+                <button id="GRIPPERCLOSE">Close</button>
+            </div>
+        </section>
+    </div>
+
+    <section style="margin-top: 16px;">
+        <h2>Move plate</h2>
+        <div class="move">
+            <label>From
+                <input type="number" value="1" min="1" max="5" id="moveFrom">
+            </label>
+            <label>To
+                <input type="number" value="5" min="1" max="5" id="moveTo">
+            </label>
+            <button id="move">Move plate</button>
+        </div>
+    </section>
+</main>
+
+<script>
+    // Colors the readout red for ERROR replies, green otherwise.
+    // Watches #replyText, so main.js doesn't need to change.
+    const readout = document.querySelector("#replyText");
+    new MutationObserver(() => {
+        const text = readout.textContent.trim().toUpperCase();
+        readout.classList.toggle("is-error", text.startsWith("ERROR"));
+        readout.classList.toggle("is-ok", text.length > 0 && !text.startsWith("ERROR"));
+    }).observe(readout, { childList: true, characterData: true, subtree: true });
+</script>
+<script src="main.js"></script>
+</body>
+</html>

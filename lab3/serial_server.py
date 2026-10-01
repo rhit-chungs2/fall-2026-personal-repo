@@ -7,7 +7,9 @@ app = flask.Flask(__name__,static_url_path="",static_folder="public")
 
 
 serial_lock = threading.Lock()
-loader = plateloader.PlateLoader() #TODO: set the port if needed.
+#loader = plateloader.PlateLoader() #TODO: set the port if needed.
+loader = plateloader.PlateLoader("/dev/ttyUSB0") #TODO: set the port if needed.
+
 
 
 
