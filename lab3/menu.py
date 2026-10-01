@@ -1,9 +1,10 @@
 import plateloader 
 
 def main():
-    loader = plateloader.PlateLoader()
+    #loader = plateloader.PlateLoader()
+    loader = plateloader.PlateLoader("/dev/ttyUSB0")
     loader.connect()
-    #loader = plateloader.PlateLoader("/dev/ttyUSB0")
+
 
     while True:
         print ("           ")

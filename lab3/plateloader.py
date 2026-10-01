@@ -4,6 +4,7 @@ import time
 
 class PlateLoader:
     def __init__(self, port="/dev/ttyACM0"):
+        #/dev/ttyAMC0 for arduino
         self.port = port
         self.ser = None
 
