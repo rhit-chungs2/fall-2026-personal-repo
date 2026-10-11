@@ -16,7 +16,7 @@ led = led.LED() #TODO: set the port if needed.
 @app.route('/')
 def handle_haked_domain():
     #return flask.redirect("/prettyone.html")  
-    return flask.redirect("/index.html")    
+    return flask.redirect("/led.html")    
 
 @app.get("/api/<command>")
 def handle_plateloader_commands(command):
