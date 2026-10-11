@@ -23,7 +23,7 @@ function main() {
     document.querySelector("#flash").onclick = () =>{
         let startPos = document.querySelector("#nums").value;
         let endPos = document.querySelector("#period").value;
-        sendCommand(`falsh/ ${startPos}/ ${endPos}`);
+        sendCommand(`flash/${startPos}/${endPos}`);
 
     };               
 }
