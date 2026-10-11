@@ -22,6 +22,15 @@ void loop() {
     }else if(inputString.equals("LED OFF")){
     digitalWrite(13,LOW);
     Serial.println("The LED is now off!");
+    }else if(inputString.equals("FLASH")){
+    int flash_amount = 5;
+    for (int i=0; i<flash_amount; i++){
+    digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
+    delay(1000);                      // wait for a second
+    digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
+    delay(1000);
+    }
+    Serial.println("Flashing");
     }else{
       Serial.print("Unknown command -->");
       Serial.println("inputString");
