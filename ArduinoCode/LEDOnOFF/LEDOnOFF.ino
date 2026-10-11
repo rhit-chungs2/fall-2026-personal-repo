@@ -22,15 +22,8 @@ void loop() {
     }else if(inputString.equals("LED OFF")){
     digitalWrite(13,LOW);
     Serial.println("The LED is now off!");
-    }else if(inputString.equals("FLASH")){
-    int flash_amount = 5;
-    for (int i=0; i<flash_amount; i++){
-    digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
-    delay(1000);                      // wait for a second
-    digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
-    delay(1000);
-    }
-    Serial.println("Flashing");
+    }else if (inputString.startsWith("FLASH")) {
+    handleFlash(inputString.substring(5));
     }else{
       Serial.print("Unknown command -->");
       Serial.println("inputString");
@@ -41,6 +34,28 @@ void loop() {
     isStringComplete = false;
   }
 }
+
+void handleFlash(String inputline){
+  inputline.trim();
+  int firstSpace = inputline.indexOf(' ');
+  String num1 = inputline.substring(0,firstSpace);
+  String num2 = inputline.substring(firstSpace+1);
+
+  int num  = num1.toInt();
+  int period = num2.toInt();
+  Serial.println("Flashes = " + String(num) + " PeriodMS = " + String(period));
+  //Serial.print("Number of times:");
+  //Serial.println(num);
+  //Serial.print("Period of:");
+  //Serial.println(period);
+  for (int i=0; i<num; i++){
+  digitalWrite(LED_BUILTIN, HIGH);  
+  delay(period/2);                      
+  digitalWrite(LED_BUILTIN, LOW);   
+  delay(period/2);
+  }
+}
+
 
 /*
   SerialEvent occurs whenever a new data comes in the hardware serial RX. This
