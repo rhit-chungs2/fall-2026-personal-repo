@@ -17,11 +17,11 @@ void loop() {
 
     if(inputString.equals("LED ON")){
       digitalWrite(13,HIGH);
-      Serial.println("The LED is now on!");
+      Serial.println("LED ON");
 
     }else if(inputString.equals("LED OFF")){
     digitalWrite(13,LOW);
-    Serial.println("The LED is now off!");
+    Serial.println("LED OFF");
     }else if (inputString.startsWith("FLASH")) {
     handleFlash(inputString.substring(5));
     }else{
