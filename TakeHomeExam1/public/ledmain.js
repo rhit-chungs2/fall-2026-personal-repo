@@ -14,16 +14,16 @@ function main() {
     //document.querySelector("#reset").innerHTML = "Hello";
     document.querySelector("#ledon").onclick = () =>{
         console.log("You pressed LED ON!");
-        sendCommand("LED ON");
+        sendCommand("led/on");
     };
     document.querySelector("#ledoff").onclick = () =>{
         console.log("You pressed LED OFF!");
-        sendCommand("LED OFF");
+        sendCommand("led/off");
     };
     document.querySelector("#flash").onclick = () =>{
         let startPos = document.querySelector("#nums").value;
         let endPos = document.querySelector("#period").value;
-        sendCommand(`FLASH ${startPos} ${endPos}`);
+        sendCommand(`falsh/ ${startPos}/ ${endPos}`);
 
     };               
 }
