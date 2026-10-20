@@ -3,7 +3,8 @@ function initializeDhAxes
 % Begin: Setup for this stand alone version that will NOT go into the GUI.
 close all
 app.axes_arm = axes;  % Create a new axes and save a handle to it.
-app.jointAngles = [0 0 0 0 0 0]; % Start at the zero angle position.
+app.jointAngles = [-90 -90 0 0 0 0]; % Start at the zero angle position.
+app.axes_arm.View = [0 0]; 
 %  End : Setup for this stand alone version that will NOT go into the GUI.
 
 
@@ -12,7 +13,8 @@ app.jointAngles = [0 0 0 0 0 0]; % Start at the zero angle position.
 clc
 
 % Prepare the axes_arm properties
-app.axes_arm.View = [90 -50];
+%app.axes_arm.View = [230 50];
+app.axes_arm.View = [30 20];
 app.axes_arm.Visible = 'off';
 
 % Once you are in Matlab App Designer you can try these axes_arm properties too.
@@ -22,29 +24,29 @@ app.axes_arm.Visible = 'off';
 % app.axes_arm.ZLim = [-22 22];
 
 % Create vertices for all the patches
-makeStlLink("ABBIRB120L1V2.stl", app.axes_arm, [.2 .2 .2]);  % Doesn't move. No need to save a handle to it.
+makeStlLink("ABBIRB120L1V4.stl", app.axes_arm, [.2 .2 .2]);  % Doesn't move. No need to save a handle to it.
 % Save references to the vertices of each patch, make points 4x1 not 3x1.
-app.link2Patch = makeStlLink("ABBIRB120L2.stl", app.axes_arm, [112/255 198/255 210/255]);
+app.link2Patch = makeStlLink("ABBIRB120L2V5.stl", app.axes_arm, [112/255 198/255 210/255]);
 app.link2Vertices = get(app.link2Patch, 'Vertices')';
 app.link2Vertices(4,:) = ones(1, size(app.link2Vertices,2));
 
-app.link3Patch = makeStlLink("ABBIRB120L3.stl", app.axes_arm, [198/255 172/255 20/255]);
+app.link3Patch = makeStlLink("ABBIRB120L3V2.stl", app.axes_arm, [198/255 172/255 20/255]);
 app.link3Vertices = get(app.link3Patch, 'Vertices')';
 app.link3Vertices(4,:) = ones(1, size(app.link3Vertices,2));
 
-app.link4Patch = makeStlLink("ABBIRB120L4.stl", app.axes_arm, [181/255 24/255 35/255]);
+app.link4Patch = makeStlLink("ABBIRB120L4V2.stl", app.axes_arm, [181/255 24/255 35/255]);
 app.link4Vertices = get(app.link4Patch, 'Vertices')';
 app.link4Vertices(4,:) = ones(1, size(app.link4Vertices,2));
 
-app.link5Patch = makeStlLink("ABBIRB120L5.stl", app.axes_arm, [190/255 100/255 170/255]);
+app.link5Patch = makeStlLink("ABBIRB120L5V2.stl", app.axes_arm, [190/255 100/255 170/255]);
 app.link5Vertices = get(app.link5Patch, 'Vertices')';
 app.link5Vertices(4,:) = ones(1, size(app.link5Vertices,2));
 
-app.link6Patch = makeStlLink("ABBIRB120L6.stl", app.axes_arm, [200/255 50/255 125/255]);
+app.link6Patch = makeStlLink("ABBIRB120L6V2.stl", app.axes_arm, [200/255 50/255 125/255]);
 app.link6Vertices = get(app.link6Patch, 'Vertices')';
 app.link6Vertices(4,:) = ones(1, size(app.link6Vertices,2));
 
-app.link7Patch = makeStlLink("ABBIRB120L7.stl", app.axes_arm, [210/255 75/255 80/255]);
+app.link7Patch = makeStlLink("ABBIRB120L7V2.stl", app.axes_arm, [210/255 75/255 80/255]);
 app.link7Vertices = get(app.link7Patch, 'Vertices')';
 app.link7Vertices(4,:) = ones(1, size(app.link7Vertices,2));
 
@@ -61,7 +63,7 @@ function updateArm(app)
  A1 = create_A_matrix(0, 290, -90, app.jointAngles(1));
  A2 = create_A_matrix(270, 0, 0, app.jointAngles(2));
  A3 = create_A_matrix(70, 0, -90, app.jointAngles(3));
- A4 = create_A_matrix(0, 151, 90, app.jointAngles(4));
+ A4 = create_A_matrix(0, 302, 90, app.jointAngles(4));
  A5 = create_A_matrix(0, 0, -90, app.jointAngles(5));
  A6 = create_A_matrix(0, 72, 0, app.jointAngles(6));
 % TODO: Use the current A matricies to form the T0_n matricies.
