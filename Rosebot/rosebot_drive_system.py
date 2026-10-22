@@ -1,4 +1,7 @@
 import motor
+import time
+
+
 
 class DriveSystem:
     def __init__(self):
@@ -25,5 +28,18 @@ class DriveSystem:
 
     def stop(self):
         self.set_speeds(0,0,0,0)
+
+    def go_straight_for_seconds(self, seconds, speed):
+        self.go(speed, speed)
+        time.sleep(seconds)
+        self.stop()
+
+
+    def go_straight_for_inches(self, inches, speed):
+        m = 0.2
+        B = 0
+        inches_per_second = m * speed + B
+        seconds = inches / inches_per_second
+        self.go_straight_for_seconds(seconds,speed)
 
 
