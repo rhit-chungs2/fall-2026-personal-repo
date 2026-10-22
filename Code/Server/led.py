@@ -3,7 +3,7 @@ import time
 from parameter import ParameterManager
 #from rpi_ledpixel import Freenove_RPI_WS281X
 from spi_ledpixel import Freenove_SPI_LedPixel
-
+#what
 class Led:
     def __init__(self):
         """Initialize the Led class and set up LED strip based on PCB and Raspberry Pi versions."""
