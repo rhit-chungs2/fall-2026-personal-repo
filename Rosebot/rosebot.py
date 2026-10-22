@@ -5,7 +5,7 @@ from rosebot_drive_system import DriveSystem
 
 class Rosebot:
     def __init__(self):
-        self.dive_system = None
+        self.drive_system = DriveSystem()
         self.leds = None
         self.ultrasonic = None
         self.line_sensor = None
