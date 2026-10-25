@@ -21,7 +21,7 @@ function_using_lambda = lambda: print("This is a func object using the keyword l
 
 
 def some_helper_function(led_board, brightness):
-    print("some helper function")
+    print("some helper function")  
     led_board.value = (brightness,0,brightness)
     time.sleep(1)
     led_board.off()
