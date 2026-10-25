@@ -60,6 +60,7 @@ def led_board():
 
         led_board.value =(0,0.5,0)
         time.sleep(1)
+        
     # Construct it
     # Make a loop that runs 5 times.
     # Turn on all the LEDs
