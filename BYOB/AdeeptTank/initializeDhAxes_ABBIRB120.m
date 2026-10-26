@@ -38,9 +38,13 @@ app.link4Patch = makeStlLink("ABBIRB120L4V2.stl", app.axes_arm, [181/255 24/255 
 app.link4Vertices = get(app.link4Patch, 'Vertices')';
 app.link4Vertices(4,:) = ones(1, size(app.link4Vertices,2));
 
+disp([min(app.link4Vertices(1:3,:),[],2), max(app.link4Vertices(1:3,:),[],2)])
+
 app.link5Patch = makeStlLink("ABBIRB120L5V2.stl", app.axes_arm, [190/255 100/255 170/255]);
 app.link5Vertices = get(app.link5Patch, 'Vertices')';
 app.link5Vertices(4,:) = ones(1, size(app.link5Vertices,2));
+
+disp([min(app.link5Vertices(1:3,:),[],2), max(app.link5Vertices(1:3,:),[],2)])
 
 app.link6Patch = makeStlLink("ABBIRB120L6V4.stl", app.axes_arm, [0/255 0/255 255/255]);
 app.link6Vertices = get(app.link6Patch, 'Vertices')';
@@ -92,3 +96,4 @@ set(app.link6Patch,'Vertices', link6VerticesWRTground(1:3,:)');
 set(app.link7Patch,'Vertices', link7VerticesWRTground(1:3,:)');
 
 end
+
