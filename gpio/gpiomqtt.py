@@ -11,11 +11,6 @@ class App:
         self.yellow_led = gz.LED(15)
         self.green_led = gz.LED(18)
 
-
-
-
-
-
         self.mqtt_client = mh.MqttClient()
         self.mqtt_client.connect(subscription_topic_name="ME435/#",
                                  publish_topic_name= "ME435/to_computer")
