@@ -48,11 +48,11 @@ class DriveSystem:
         time.sleep(seconds)
         self.stop()
     def spin_in_place_for_degrees(self, degrees, speed):
-        m = 1.8 
+        m = 3.6
         B = 0
         w = m * abs(speed) + B
         seconds = degrees / w
         if degrees <0:
             speed = -speed
-        self.spin_in_place_for_seconds(seconds, speed)
+        self.spin_in_place_for_seconds(seconds/2, speed)
 
