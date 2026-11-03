@@ -9,14 +9,14 @@ def main():
     try:
         while True:
             print(robot.ultrasonic.get_cm())
-            print(robot.line_sensors.get_line_word())
+            print(robot.line_sensor.get_line_word())
             #Get ultrasonic sensor 
 
             distance = robot.ultrasonic.get_cm()
             if distance < 20:
                 robot.drive_system.stop()
             else:
-                word = robot.line_sensors.get_line_word()
+                word = robot.line_sensor.get_line_word()
                 if word == "WBW":
                     robot.drive_system.go(20,20)
                     last_turn = "straight"
