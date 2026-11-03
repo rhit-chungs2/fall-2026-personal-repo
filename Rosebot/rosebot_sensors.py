@@ -25,14 +25,14 @@ class LineSensors:
     def get_middle(self):
         # 0 is White
         # 1 is Black
-        if self.left.value == 1:
+        if self.middle.value == 1:
             return "B"
         return "W"
 
     def get_right(self):
         # 0 is White
         # 1 is Black
-        if self.left.value == 1:
+        if self.right.value == 1:
             return "B"
         return "W"
     
