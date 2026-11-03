@@ -43,3 +43,16 @@ class DriveSystem:
         self.go_straight_for_seconds(seconds,speed)
 
 
+    def spin_in_place_for_seconds(self, seconds, speed):
+        self.go(speed, -speed)
+        time.sleep(seconds)
+        self.stop()
+    def spin_in_place_for_degrees(self, degrees, speed):
+        m = 1.8 
+        B = 0
+        w = m * abs(speed) + B
+        seconds = degrees / w
+        if degrees <0:
+            speed = -speed
+        self.spin_in_place_for_seconds(seconds, speed)
+
