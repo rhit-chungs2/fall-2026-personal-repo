@@ -17,8 +17,8 @@ class App:
 
 
         self.mqtt_client = mh.MqttClient()
-        self.mqtt_client.connect(subscription_topic_name="me435/wot/#",
-                                 publish_topic_name= "me435/wot/to_computer")
+        self.mqtt_client.connect(subscription_topic_name="ME435/#",
+                                 publish_topic_name= "ME435/to_computer")
         self.mqtt_client.callback = self.mqtt_callback
 
 
@@ -43,9 +43,9 @@ class App:
             elif message_payload == 0:
                 self.yellow_led.off()
         if message_type == "green":
-            if message_payload == True:
+            if message_payload:
                 self.green_led.on()
-            elif message_payload == False:
+            else:
                 self.green_led.off()
 
         if message_type == "leds":
