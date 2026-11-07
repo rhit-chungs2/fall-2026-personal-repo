@@ -9,7 +9,7 @@ class App:
         self.robot = Rosebot()
         self.mqtt_client = mh.MqttClient()
         self.mqtt_client.connect(subscription_topic_name="ME435/#",
-                                 publish_topic_name= "ME435/otto/to_computer")
+                                 publish_topic_name= "ME435/jason/to_computer")
         self.mqtt_client.callback = self.mqtt_callback
 
     def mqtt_callback(self, message_type, message_payload):
