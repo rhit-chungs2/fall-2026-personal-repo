@@ -31,7 +31,12 @@ def main():
 
     try:
 
-        # while True:
+         while True:
+            #distance = 42.7
+            distance = app.robot.ultrasonic.get_cm()
+            print("Ultra: ", distance)
+            time.sleep(2)
+            app.mqtt_client.send_message("ultra", distance)
         #     #Send test messages
         #     app.mqtt_client.send_message("beep")
         #     time.sleep(2)
@@ -40,7 +45,7 @@ def main():
     
             #app.mqtt_client.send_message("leds","[1,0,1]")        
             #time.sleep(1)
-        signal.pause() #keeps the program alive but does nothing
+        #signal.pause() #keeps the program alive but does nothing
     except KeyboardInterrupt:
         print("Goodbye")
         app.robot.drive_system.stop()
