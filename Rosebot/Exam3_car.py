@@ -64,9 +64,7 @@ def main():
     try:
 
         while True:
-            distance = 42.7
-
-            #distance = app.robot.ultrasonic.get_cm()
+            distance = app.robot.ultrasonic.get_cm()
             print("Ultra: ", distance)
             time.sleep(2)
             app.mqtt_client.send_message("ultra", distance)
