@@ -8,31 +8,49 @@ class App:
     def __init__(self):
         self.robot = Rosebot()
         self.mqtt_client = mh.MqttClient()
-        self.mqtt_client.connect(subscription_topic_name="ME435/#",
+        self.mqtt_client.connect(subscription_topic_name="ME435/jason/to_pi",
                                  publish_topic_name= "ME435/jason/to_computer")
         self.mqtt_client.callback = self.mqtt_callback
 
     def mqtt_callback(self, message_type, message_payload):
-        print("Side:", message_type)
-        print()
-        print("Direction:", message_payload[1])
-        print()
-        print("Time:", message_payload[2])
-        if message_type == "Both":
-            print("Speed Left:", message_payload[3])
-            print()
-            print("Speed Right:\n", message_payload[4])
+        if message_type == "both":
+            print(f"Side: {message_type.capitalize()} Direction: {message_payload[0]} Time: {message_payload[1]} Speed Left: {message_payload[2]} Speed Right: {message_payload[3]}")
         else:
-            print("Speed:\n", message_payload[3])
+            print(f"Side: {message_type.capitalize()} Direction: {message_payload[0]} Time: {message_payload[1]} Speed: {message_payload[2]}")
+
+
+  
 
 
         if message_type == "left":
-            self.robot.drive_system.set_speeds(message_payload[3],message_payload[3],0,0)
+            if message_payload[0] == 1:
+                self.robot.drive_system.set_speeds(message_payload[2],message_payload[2],0,0)
+                time.sleep(message_payload[1])
+                self.robot.drive_system.stop()
+            else:
+                self.robot.drive_system.set_speeds(-message_payload[2],-message_payload[2],0,0)
+                time.sleep(message_payload[1])
+                self.robot.drive_system.stop()
+
         if message_type == "right":
-            self.robot.drive_system.set_speeds(0,0, message_payload[3], message_payload[3])
+            if message_payload[0] == 1:
+                self.robot.drive_system.set_speeds(0,0, message_payload[2], message_payload[2])
+                time.sleep(message_payload[1])
+                self.robot.drive_system.stop()                
+            else:
+                self.robot.drive_system.set_speeds(0,0, -message_payload[2], -message_payload[2])
+                time.sleep(message_payload[1])
+                self.robot.drive_system.stop()                
         if message_type == "both":
-            self.robot.drive_system.set_speeds(message_payload[3],message_payload[3],message_payload[4],message_payload[4])
-        
+            if message_payload[0] ==1:
+                self.robot.drive_system.set_speeds(message_payload[2],message_payload[2],message_payload[3],message_payload[3])
+                time.sleep(message_payload[1])
+                self.robot.drive_system.stop()
+            else:
+                self.robot.drive_system.set_speeds(-message_payload[2],-message_payload[2],-message_payload[3],-message_payload[3])
+                time.sleep(message_payload[1])
+                self.robot.drive_system.stop()
+
         # if message_type == "stop":
         #     self.robot.drive_system.set_speeds(0, 0, 0, 0)        
         # if message_type == "beep":
@@ -40,21 +58,17 @@ class App:
         
 def main():
     print("Exam 3 Car MQTT")
-
     app = App()
 
     try:
 
-        # while True:
-        #     #Send test messages
-        #     app.mqtt_client.send_message("beep")
-        #     time.sleep(2)
-        #     app.mqtt_client.send_message("stop")
-        #     time.sleep(1)
-    
-            #app.mqtt_client.send_message("leds","[1,0,1]")        
-            #time.sleep(1)
-        signal.pause() #keeps the program alive but does nothing
+        while True:
+            distance = app.robot.ultrasonic.get_cm()
+            print("Ultra: ", distance)
+            time.sleep(2)
+            app.mqtt_client.send_message("ultra", distance)
+
+        #signal.pause() #keeps the program alive but does nothing
     except KeyboardInterrupt:
         print("Goodbye")
         app.robot.drive_system.stop()
