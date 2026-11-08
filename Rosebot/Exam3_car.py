@@ -13,6 +13,8 @@ class App:
         self.mqtt_client.callback = self.mqtt_callback
 
     def mqtt_callback(self, message_type, message_payload):
+        print("Recieved type:", message_type)
+        print("Recieved payload:", message_payload)
         if message_type == "both":
             print(f"Side: {message_type.capitalize()} Direction: {message_payload[0]} Time: {message_payload[1]} Speed Left: {message_payload[2]} Speed Right: {message_payload[3]}")
         else:
@@ -59,7 +61,6 @@ class App:
 def main():
     print("Exam 3 Car MQTT")
     app = App()
-
     try:
 
         while True:
