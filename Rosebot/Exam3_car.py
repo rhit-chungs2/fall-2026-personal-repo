@@ -59,10 +59,12 @@ class App:
 def main():
     print("Exam 3 Car MQTT")
     app = App()
+    print("Exam 3 Car MQTT")
 
     try:
 
         while True:
+            print("reading sensor...")
             distance = app.robot.ultrasonic.get_cm()
             print("Ultra: ", distance)
             time.sleep(2)
