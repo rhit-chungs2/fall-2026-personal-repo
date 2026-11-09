@@ -40,7 +40,8 @@ def main():
             current_time_s = right_now.timestamp()
             print(current_time_s)
             #Strategy is to look at the clock, if two seconds have passed do something.
-            if app.is_streaming:
+            if app.is_streaming and current_time_s>last_time_sent_s + 2.0:
+                last_time_sent_s = current_time_s
                 app.mqtt_client.send_message("Line_sensor_reading",{})
 
         #     #Send test messages
