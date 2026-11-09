@@ -46,6 +46,7 @@ def main():
     #Talking to myself
     time.sleep(2)
     #app.mqtt_client.send_message("is_streaming", True)
+    app.mqtt_client.send_message("mode", "drive_until_wall")
 
     try:
 
@@ -63,6 +64,12 @@ def main():
                     "right": app.robot.line_sensor.get_right(),
 
                       })
+                if app.mode == "drive_until_wall":
+                    #check for wall
+                    if app.robot.ultrasonic.get_cm() < 20:
+                        app.robot.drive_system.stop()
+                        app.robot.buzzer.beep(on_time= 0.1, off_time = 0.1, n=3)
+                        app.mode = "none"
 
         #     #Send test messages
         #     app.mqtt_client.send_message("beep")
