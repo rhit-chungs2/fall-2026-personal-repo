@@ -73,6 +73,7 @@ def main():
                 if app.mode == "drive_until_line":
                     if app.robot.line_sensor.get_left() == "B" and app.robot.line_sensor.get_middle() == "B" and app.robot.line_sensor.get_right() == "B":
                         app.robot.drive_system.stop()
+                        app.robot.buzzer.beep(on_time= 0.1, off_time = 0.1, n=3)
                         app.mode = "none"
         #     #Send test messages
         #     app.mqtt_client.send_message("beep")
