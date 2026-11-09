@@ -47,7 +47,7 @@ def main():
                     "left": app.robot.line_sensor.get_left(),
                     "middle": app.robot.line_sensor.get_middle(),
                     "right": app.robot.line_sensor.get_right(),
-                    
+
                       })
 
         #     #Send test messages
