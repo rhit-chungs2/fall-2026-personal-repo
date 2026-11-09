@@ -27,12 +27,26 @@ class App:
             self.robot.drive_system.set_speeds(0, 0, 0, 0)        
         if message_type == "beep":
             self.robot.buzzer.beep(on_time=0.1, off_time=0.3, n =2)
+        if message_type == "is_streaming":
+            self.is_streaming = message_payload
+        if message_type == "mode":
+            self.mode = message_payload
+            if self.mode == "drive_unitl_wall" or self.mode == "drive_until_line":
+                self.robot.drive_system(20,20)
+            if self.mode == "none":
+                self.robot.drive_system.stop()
         
 def main():
     print("Car MQTT")
 
     app = App()
     last_time_sent_s = 0
+
+
+    #Talking to myself
+    time.sleep(2)
+    #app.mqtt_client.send_message("is_streaming", True)
+
     try:
 
          while True:
