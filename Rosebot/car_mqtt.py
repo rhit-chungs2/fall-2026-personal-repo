@@ -31,10 +31,15 @@ class App:
             self.is_streaming = message_payload
         if message_type == "mode":
             self.mode = message_payload
-            if self.mode == "drive_unitl_wall" or self.mode == "drive_until_line":
+            if self.mode == "drive_unitl_wall":
                 self.robot.drive_system.go(20,20)
             if self.mode == "none":
                 self.robot.drive_system.stop()
+            if self.mode == "drive_until_line":
+                self.robot.drive_system.go(20,20)
+
+
+                
         
 def main():
     print("Car MQTT")
@@ -47,7 +52,7 @@ def main():
     time.sleep(2)
     #app.mqtt_client.send_message("is_streaming", True)
     #app.mqtt_client.send_message("mode", "drive_unitl_wall")
-    app.mqtt_client.send_message("mode", "drive_unitl_line")
+    #app.mqtt_client.send_message("mode", "drive_unitl_line")
 
     try:
 
@@ -58,24 +63,25 @@ def main():
             #Strategy is to look at the clock, if two seconds have passed do something.
             if app.is_streaming and current_time_s>last_time_sent_s + 2.0:
                 last_time_sent_s = current_time_s
-                app.mqtt_client.send_message("Line_sensor_reading",{
+                app.mqtt_client.send_message("line_sensor_reading",{
                     "timestamp": right_now.strftime("%m/%d/%Y %H:%M:%S"),
                     "left": app.robot.line_sensor.get_left(),
                     "middle": app.robot.line_sensor.get_middle(),
                     "right": app.robot.line_sensor.get_right(),
 
                       })
+                if app.mode == "drive_until_line":
+                    if app.robot.line_sensor.get_left() != "B" or app.robot.line_sensor.get_middle() != "B" or app.robot.line_sensor.get_right() != "B":
+                        app.robot.drive_system.stop()
+                        app.robot.buzzer.beep(on_time= 0.1, off_time = 0.1, n=3)
+                        app.mode = "none"
                 if app.mode == "drive_unitl_wall":
                     #check for wall
                     if app.robot.ultrasonic.get_cm() < 20:
                         app.robot.drive_system.stop()
                         app.robot.buzzer.beep(on_time= 0.1, off_time = 0.1, n=3)
                         app.mode = "none"
-                elif app.mode == "drive_until_line":
-                    if app.robot.line_sensor.get_left() == "B" and app.robot.line_sensor.get_middle() == "B" and app.robot.line_sensor.get_right() == "B":
-                        app.robot.drive_system.stop()
-                        app.robot.buzzer.beep(on_time= 0.1, off_time = 0.1, n=3)
-                        app.mode = "none"
+
         #     #Send test messages
         #     app.mqtt_client.send_message("beep")
         #     time.sleep(2)
