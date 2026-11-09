@@ -32,7 +32,7 @@ class App:
         if message_type == "mode":
             self.mode = message_payload
             if self.mode == "drive_unitl_wall" or self.mode == "drive_until_line":
-                self.robot.drive_system(20,20)
+                self.robot.drive_system.go(20,20)
             if self.mode == "none":
                 self.robot.drive_system.stop()
         
@@ -46,14 +46,14 @@ def main():
     #Talking to myself
     time.sleep(2)
     #app.mqtt_client.send_message("is_streaming", True)
-    app.mqtt_client.send_message("mode", "drive_until_wall")
+    app.mqtt_client.send_message("mode", "drive_unitl_wall")
 
     try:
 
          while True:
             right_now = datetime.datetime.now()
             current_time_s = right_now.timestamp()
-            print(current_time_s)
+            #print(current_time_s)
             #Strategy is to look at the clock, if two seconds have passed do something.
             if app.is_streaming and current_time_s>last_time_sent_s + 2.0:
                 last_time_sent_s = current_time_s
@@ -64,7 +64,7 @@ def main():
                     "right": app.robot.line_sensor.get_right(),
 
                       })
-                if app.mode == "drive_until_wall":
+                if app.mode == "drive_unitl_wall":
                     #check for wall
                     if app.robot.ultrasonic.get_cm() < 20:
                         app.robot.drive_system.stop()
