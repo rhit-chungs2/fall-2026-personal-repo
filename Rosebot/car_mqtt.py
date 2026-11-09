@@ -2,11 +2,15 @@ import mqtt_helper as mh
 import signal
 import time
 from rosebot import Rosebot
+import datetime
 
 
 class App:
     def __init__(self):
         self.robot = Rosebot()
+        self.is_streaming = True 
+        self.mode = "none"
+
         self.mqtt_client = mh.MqttClient()
         self.mqtt_client.connect(subscription_topic_name="ME435/#",
                                  publish_topic_name= "ME435/jason/to_computer")
@@ -28,15 +32,17 @@ def main():
     print("Car MQTT")
 
     app = App()
-
+    last_time_sent_s = 0
     try:
 
          while True:
-            #distance = 42.7
-            distance = app.robot.ultrasonic.get_cm()
-            print("Ultra: ", distance)
-            time.sleep(2)
-            app.mqtt_client.send_message("ultra", distance)
+            right_now = datetime.datetime.now()
+            current_time_s = right_now.timestamp()
+            print(current_time_s)
+            #Strategy is to look at the clock, if two seconds have passed do something.
+            if app.is_streaming:
+                app.mqtt_client.send_message("Line_sensor_reading",{})
+
         #     #Send test messages
         #     app.mqtt_client.send_message("beep")
         #     time.sleep(2)
