@@ -42,7 +42,13 @@ def main():
             #Strategy is to look at the clock, if two seconds have passed do something.
             if app.is_streaming and current_time_s>last_time_sent_s + 2.0:
                 last_time_sent_s = current_time_s
-                app.mqtt_client.send_message("Line_sensor_reading",{})
+                app.mqtt_client.send_message("Line_sensor_reading",{
+                    "timestamp": right_now.strftime("%m/%d/%Y %H:%M:%S"),
+                    "left": app.robot.line_sensor.get_left(),
+                    "middle": app.robot.line_sensor.get_middle(),
+                    "right": app.robot.line_sensor.get_right(),
+                    
+                      })
 
         #     #Send test messages
         #     app.mqtt_client.send_message("beep")
