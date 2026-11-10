@@ -8,7 +8,7 @@ import datetime
 class App:
     def __init__(self):
         self.robot = Rosebot()
-        self.is_streaming = True 
+        self.is_streaming = False 
         self.mode = "none"
 
         self.mqtt_client = mh.MqttClient()
@@ -37,13 +37,14 @@ class App:
                 self.robot.drive_system.stop()
             if self.mode == "drive_until_line":
                 self.robot.drive_system.go(20,20)
+            
+            
 
 
                 
         
 def main():
     print("Car MQTT")
-
     app = App()
     last_time_sent_s = 0
 
@@ -61,7 +62,7 @@ def main():
             current_time_s = right_now.timestamp()
             #print(current_time_s)
             #Strategy is to look at the clock, if two seconds have passed do something.
-            if app.is_streaming and current_time_s>last_time_sent_s + 2.0:
+            if app.is_streaming and current_time_s > last_time_sent_s + 2.0:
                 last_time_sent_s = current_time_s
                 app.mqtt_client.send_message("line_sensor_reading",{
                     "timestamp": right_now.strftime("%m/%d/%Y %H:%M:%S"),
@@ -70,17 +71,37 @@ def main():
                     "right": app.robot.line_sensor.get_right(),
 
                       })
-                if app.mode == "drive_until_line":
-                    if app.robot.line_sensor.get_left() != "B" or app.robot.line_sensor.get_middle() != "B" or app.robot.line_sensor.get_right() != "B":
-                        app.robot.drive_system.stop()
-                        app.robot.buzzer.beep(on_time= 0.1, off_time = 0.1, n=3)
-                        app.mode = "none"
-                if app.mode == "drive_unitl_wall":
-                    #check for wall
-                    if app.robot.ultrasonic.get_cm() < 20:
-                        app.robot.drive_system.stop()
-                        app.robot.buzzer.beep(on_time= 0.1, off_time = 0.1, n=3)
-                        app.mode = "none"
+            if app.mode == "drive_until_line":
+                if app.robot.line_sensor.get_left() == "B" or app.robot.line_sensor.get_middle() == "B" or app.robot.line_sensor.get_right() == "B":
+                    app.robot.drive_system.stop()
+                    app.robot.buzzer.beep(on_time= 0.1, off_time = 0.1, n=3)
+                    app.mode = "none"
+                else:
+                    app.robot.drive_system.go(20,20)
+            if app.mode == "drive_unitl_wall":
+                #check for wall
+                if app.robot.ultrasonic.get_cm() < 20:
+                    app.robot.drive_system.stop()
+                    app.robot.buzzer.beep(on_time= 0.1, off_time = 0.1, n=3)
+                    app.mode = "none"
+                else:
+                    app.robot.drive_system.go(20,20)
+            if app.mode == "line_following":
+                    word = app.robot.line_sensor.get_line_word()
+                    if word == "WBW":
+                        app.robot.drive_system.go(20,20)
+                    elif word == "BBW":
+                        app.robot.drive_system.go(10,25)
+                    elif word == "WBB":
+                        app.robot.drive_system.go(25,10)
+                    elif word == "BWW":
+                        app.robot.drive_system.go(-5,25)
+                    elif word == "WWB":
+                        app.robot.drive_system.go(25,-5)
+                    elif word == "WWW":
+                        app.robot.drive_system.go(15, -15)
+            time.sleep(0.01)
+
 
         #     #Send test messages
         #     app.mqtt_client.send_message("beep")
